@@ -48,6 +48,8 @@
         .logo {
             padding: 0 12px;
             margin-bottom: 20px;
+            display: flex;
+            align-items: center;
         }
 
         .logo i {
@@ -185,7 +187,8 @@
             border-radius: 5px;
             margin-bottom: 15px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            background: linear-gradient(135deg, #2e5dea, #d368c0);
+            background-size: cover;
+            background-position: center;
         }
 
         .album-title {
@@ -240,7 +243,8 @@
             width: 56px;
             height: 56px;
             border-radius: 5px;
-            background: linear-gradient(135deg, #2e5dea, #d368c0);
+            background-size: cover;
+            background-position: center;
         }
 
         .player-controls {
@@ -345,6 +349,27 @@
             border-radius: 2px;
         }
 
+        /* Loading animation */
+        .loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+
+        .loader .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-left-color: var(--highlight);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .container {
@@ -434,60 +459,16 @@
             </div>
             
             <h2 class="section-title">Recently Played</h2>
-            <div class="album-grid">
-                <div class="album-card">
-                    <div class="album-cover"></div>
-                    <div class="album-title">Daily Mix 1</div>
-                    <div class="album-artist">Artist 1, Artist 2, Artist 3</div>
-                </div>
-                <div class="album-card">
-                    <div class="album-cover"></div>
-                    <div class="album-title">Discover Weekly</div>
-                    <div class="album-artist">Your personal mixtape</div>
-                </div>
-                <div class="album-card">
-                    <div class="album-cover"></div>
-                    <div class="album-title">Mood Booster</div>
-                    <div class="album-artist">Upbeat and energetic</div>
-                </div>
-                <div class="album-card">
-                    <div class="album-cover"></div>
-                    <div class="album-title">Rock Classics</div>
-                    <div class="album-artist">Queen, The Beatles, Led Zeppelin</div>
-                </div>
-                <div class="album-card">
-                    <div class="album-cover"></div>
-                    <div class="album-title">Chill Hits</div>
-                    <div class="album-artist">Relax and unwind</div>
-                </div>
-                <div class="album-card">
-                    <div class="album-cover"></div>
-                    <div class="album-title">Top Hits 2023</div>
-                    <div class="album-artist">Today's top hits</div>
+            <div id="recently-played" class="album-grid">
+                <div class="loader">
+                    <div class="spinner"></div>
                 </div>
             </div>
             
             <h2 class="section-title">Made For You</h2>
-            <div class="album-grid">
-                <div class="album-card">
-                    <div class="album-cover"></div>
-                    <div class="album-title">Release Radar</div>
-                    <div class="album-artist">New music from artists you follow</div>
-                </div>
-                <div class="album-card">
-                    <div class="album-cover"></div>
-                    <div class="album-title">Time Capsule</div>
-                    <div class="album-artist">Songs from your past</div>
-                </div>
-                <div class="album-card">
-                    <div class="album-cover"></div>
-                    <div class="album-title">On Repeat</div>
-                    <div class="album-artist">Songs you love right now</div>
-                </div>
-                <div class="album-card">
-                    <div class="album-cover"></div>
-                    <div class="album-title">Summer Rewind</div>
-                    <div class="album-artist">Your summer favorites</div>
+            <div id="made-for-you" class="album-grid">
+                <div class="loader">
+                    <div class="spinner"></div>
                 </div>
             </div>
         </div>
@@ -496,10 +477,10 @@
     <!-- Player -->
     <div class="player">
         <div class="current-track">
-            <div class="small-cover"></div>
+            <div class="small-cover" id="current-track-cover"></div>
             <div class="track-info">
-                <div class="track-name">Song Title</div>
-                <div class="artist-name">Artist Name</div>
+                <div class="track-name" id="current-track-name">Select a song to play</div>
+                <div class="artist-name" id="current-artist-name">-</div>
             </div>
             <i class="fas fa-heart"></i>
         </div>
@@ -509,13 +490,13 @@
                 <button class="control-button">
                     <i class="fas fa-random"></i>
                 </button>
-                <button class="control-button">
+                <button class="control-button" id="prev-button">
                     <i class="fas fa-step-backward"></i>
                 </button>
-                <button class="control-button play">
+                <button class="control-button play" id="play-button">
                     <i class="fas fa-play-circle"></i>
                 </button>
-                <button class="control-button">
+                <button class="control-button" id="next-button">
                     <i class="fas fa-step-forward"></i>
                 </button>
                 <button class="control-button">
@@ -523,20 +504,207 @@
                 </button>
             </div>
             <div class="progress-bar">
-                <span class="progress-time">1:23</span>
+                <span class="progress-time" id="current-time">0:00</span>
                 <div class="progress">
-                    <div class="progress-fill"></div>
+                    <div class="progress-fill" id="progress-fill"></div>
                 </div>
-                <span class="progress-time">3:45</span>
+                <span class="progress-time" id="total-time">0:00</span>
             </div>
         </div>
         
         <div class="volume-controls">
             <i class="fas fa-volume-up volume-icon"></i>
             <div class="volume-bar">
-                <div class="volume-fill"></div>
+                <div class="volume-fill" id="volume-fill"></div>
             </div>
         </div>
     </div>
+
+    <audio id="audio-player"></audio>
+
+    <script>
+        // Music data with real album covers and preview URLs
+        const musicData = {
+            "recentlyPlayed": [
+                {
+                    "title": "Blinding Lights",
+                    "artist": "The Weeknd",
+                    "album": "After Hours",
+                    "cover": "https://upload.wikimedia.org/wikipedia/en/c/c1/The_Weeknd_-_After_Hours.png",
+                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
+                },
+                {
+                    "title": "Don't Start Now",
+                    "artist": "Dua Lipa",
+                    "album": "Future Nostalgia",
+                    "cover": "https://upload.wikimedia.org/wikipedia/en/f/f5/Dua_Lipa_-_Future_Nostalgia_%28Official_Album_Cover%29.png",
+                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
+                },
+                {
+                    "title": "Watermelon Sugar",
+                    "artist": "Harry Styles",
+                    "album": "Fine Line",
+                    "cover": "https://upload.wikimedia.org/wikipedia/en/3/3b/Harry_Styles_-_Fine_Line.png",
+                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
+                },
+                {
+                    "title": "Dynamite",
+                    "artist": "BTS",
+                    "album": "Dynamite (Single)",
+                    "cover": "https://upload.wikimedia.org/wikipedia/en/6/6b/BTS_-_Dynamite_%28official_cover%29.png",
+                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
+                },
+                {
+                    "title": "Levitating",
+                    "artist": "Dua Lipa ft. DaBaby",
+                    "album": "Future Nostalgia",
+                    "cover": "https://upload.wikimedia.org/wikipedia/en/f/f5/Dua_Lipa_-_Future_Nostalgia_%28Official_Album_Cover%29.png",
+                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
+                },
+                {
+                    "title": "Save Your Tears",
+                    "artist": "The Weeknd",
+                    "album": "After Hours",
+                    "cover": "https://upload.wikimedia.org/wikipedia/en/c/c1/The_Weeknd_-_After_Hours.png",
+                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
+                }
+            ],
+            "madeForYou": [
+                {
+                    "title": "Good 4 U",
+                    "artist": "Olivia Rodrigo",
+                    "album": "SOUR",
+                    "cover": "https://upload.wikimedia.org/wikipedia/en/2/2c/Olivia_Rodrigo_-_SOUR.png",
+                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
+                },
+                {
+                    "title": "Stay",
+                    "artist": "The Kid LAROI & Justin Bieber",
+                    "album": "F*CK LOVE 3: OVER YOU",
+                    "cover": "https://upload.wikimedia.org/wikipedia/en/9/9b/The_Kid_Laroi_-_F%2A%2A%2A_Love_3%2B.png",
+                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
+                },
+                {
+                    "title": "Industry Baby",
+                    "artist": "Lil Nas X & Jack Harlow",
+                    "album": "MONTERO",
+                    "cover": "https://upload.wikimedia.org/wikipedia/en/5/5d/Lil_Nas_X_-_Montero_%28Official_Album_Cover%29.png",
+                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
+                },
+                {
+                    "title": "Shivers",
+                    "artist": "Ed Sheeran",
+                    "album": "=",
+                    "cover": "https://upload.wikimedia.org/wikipedia/en/2/2a/Ed_Sheeran_-_Equals.png",
+                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
+                },
+                {
+                    "title": "Heat Waves",
+                    "artist": "Glass Animals",
+                    "album": "Dreamland",
+                    "cover": "https://upload.wikimedia.org/wikipedia/en/2/2a/Glass_Animals_-_Dreamland.png",
+                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
+                },
+                {
+                    "title": "Easy On Me",
+                    "artist": "Adele",
+                    "album": "30",
+                    "cover": "https://upload.wikimedia.org/wikipedia/en/0/08/Adele_-_30_cover.jpg",
+                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
+                }
+            ]
+        };
+
+        // Audio player setup
+        const audioPlayer = document.getElementById('audio-player');
+        const playButton = document.getElementById('play-button');
+        const prevButton = document.getElementById('prev-button');
+        const nextButton = document.getElementById('next-button');
+        const progressFill = document.getElementById('progress-fill');
+        const currentTimeDisplay = document.getElementById('current-time');
+        const totalTimeDisplay = document.getElementById('total-time');
+        const currentTrackName = document.getElementById('current-track-name');
+        const currentArtistName = document.getElementById('current-artist-name');
+        const currentTrackCover = document.getElementById('current-track-cover');
+
+        let currentTrack = null;
+        let isPlaying = false;
+
+        // Format time in minutes:seconds
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            if (audioPlayer.duration) {
+                const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                progressFill.style.width = `${percent}%`;
+                currentTimeDisplay.textContent = formatTime(audioPlayer.currentTime);
+            }
+        }
+
+        // Play a track
+        function playTrack(track) {
+            currentTrack = track;
+            audioPlayer.src = track.preview;
+            audioPlayer.play();
+            isPlaying = true;
+            playButton.innerHTML = '<i class="fas fa-pause-circle"></i>';
+            currentTrackName.textContent = track.title;
+            currentArtistName.textContent = track.artist;
+            currentTrackCover.style.backgroundImage = `url(${track.cover})`;
+            totalTimeDisplay.textContent = formatTime(audioPlayer.duration);
+        }
+
+        // Toggle play/pause
+        function togglePlay() {
+            if (isPlaying) {
+                audioPlayer.pause();
+                playButton.innerHTML = '<i class="fas fa-play-circle"></i>';
+            } else {
+                audioPlayer.play();
+                playButton.innerHTML = '<i class="fas fa-pause-circle"></i>';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Event listeners
+        audioPlayer.addEventListener('timeupdate', updateProgress);
+        audioPlayer.addEventListener('ended', () => {
+            isPlaying = false;
+            playButton.innerHTML = '<i class="fas fa-play-circle"></i>';
+        });
+        playButton.addEventListener('click', togglePlay);
+
+        // Render album cards
+        function renderAlbumCards(containerId, tracks) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            tracks.forEach(track => {
+                const card = document.createElement('div');
+                card.className = 'album-card';
+                card.innerHTML = `
+                    <div class="album-cover" style="background-image: url(${track.cover})"></div>
+                    <div class="album-title">${track.title}</div>
+                    <div class="album-artist">${track.artist}</div>
+                `;
+                card.addEventListener('click', () => playTrack(track));
+                container.appendChild(card);
+            });
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAlbumCards('recently-played', musicData.recentlyPlayed);
+            renderAlbumCards('made-for-you', musicData.madeForYou);
+            
+            // Set the first track as default
+            currentTrackCover.style.backgroundImage = `url(${musicData.recentlyPlayed[0].cover})`;
+        });
+    </script>
 </body>
 </html>
