@@ -480,11 +480,10 @@
             <div class="divider"></div>
             
             <div class="playlists" id="genre-playlists">
+                <div class="nav-item" data-genre="all">All Hits</div>
                 <div class="nav-item" data-genre="pop">Pop Hits</div>
                 <div class="nav-item" data-genre="rock">Rock Classics</div>
                 <div class="nav-item" data-genre="hiphop">Hip-Hop Essentials</div>
-                <div class="nav-item" data-genre="electronic">Electronic Dance</div>
-                <div class="nav-item" data-genre="jazz">Jazz Collection</div>
             </div>
         </div>
         
@@ -511,8 +510,6 @@
                 <button class="genre-button" data-genre="pop">Pop</button>
                 <button class="genre-button" data-genre="rock">Rock</button>
                 <button class="genre-button" data-genre="hiphop">Hip-Hop</button>
-                <button class="genre-button" data-genre="electronic">Electronic</button>
-                <button class="genre-button" data-genre="jazz">Jazz</button>
             </div>
             
             <h2 class="section-title">Featured Tracks</h2>
@@ -582,12 +579,24 @@
     <script>
         // Music data with real working preview URLs and covers
         const musicData = {
-            "pop": [
+            "all": [
                 {
                     "title": "Blinding Lights",
                     "artist": {"name": "The Weeknd"},
                     "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/eca36a5b5ee6c868366ac4d8a4c6c4ec/250x250-000000-80-0-0.jpg"},
                     "preview": "https://cdns-preview-5.dzcdn.net/stream/c-5b8cbfe5a5e8aeb6fa5b0e3bf52c5c2f-6.mp3"
+                },
+                {
+                    "title": "Save Your Tears",
+                    "artist": {"name": "The Weeknd"},
+                    "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/eca36a5b5ee6c868366ac4d8a4c6c4ec/250x250-000000-80-0-0.jpg"},
+                    "preview": "https://cdns-preview-5.dzcdn.net/stream/c-5b8cbfe5a5e8aeb6fa5b0e3bf52c5c2f-6.mp3"
+                },
+                {
+                    "title": "Levitating",
+                    "artist": {"name": "Dua Lipa"},
+                    "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/6c6d5e1e9caeb3b8d5f99b96c9e5b5a8/250x250-000000-80-0-0.jpg"},
+                    "preview": "https://cdns-preview-4.dzcdn.net/stream/c-4b2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
                 },
                 {
                     "title": "Don't Start Now",
@@ -597,6 +606,50 @@
                 },
                 {
                     "title": "Watermelon Sugar",
+                    "artist": {"name": "Harry Styles"},
+                    "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/8b58c5f5e5e5e5e5e5e5e5e5e5e5e5e5/250x250-000000-80-0-0.jpg"},
+                    "preview": "https://cdns-preview-3.dzcdn.net/stream/c-3b2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
+                },
+                {
+                    "title": "As It Was",
+                    "artist": {"name": "Harry Styles"},
+                    "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/8b58c5f5e5e5e5e5e5e5e5e5e5e5e5e5/250x250-000000-80-0-0.jpg"},
+                    "preview": "https://cdns-preview-3.dzcdn.net/stream/c-3b2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
+                }
+            ],
+            "pop": [
+                {
+                    "title": "Blinding Lights",
+                    "artist": {"name": "The Weeknd"},
+                    "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/eca36a5b5ee6c868366ac4d8a4c6c4ec/250x250-000000-80-0-0.jpg"},
+                    "preview": "https://cdns-preview-5.dzcdn.net/stream/c-5b8cbfe5a5e8aeb6fa5b0e3bf52c5c2f-6.mp3"
+                },
+                {
+                    "title": "Save Your Tears",
+                    "artist": {"name": "The Weeknd"},
+                    "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/eca36a5b5ee6c868366ac4d8a4c6c4ec/250x250-000000-80-0-0.jpg"},
+                    "preview": "https://cdns-preview-5.dzcdn.net/stream/c-5b8cbfe5a5e8aeb6fa5b0e3bf52c5c2f-6.mp3"
+                },
+                {
+                    "title": "Levitating",
+                    "artist": {"name": "Dua Lipa"},
+                    "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/6c6d5e1e9caeb3b8d5f99b96c9e5b5a8/250x250-000000-80-0-0.jpg"},
+                    "preview": "https://cdns-preview-4.dzcdn.net/stream/c-4b2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
+                },
+                {
+                    "title": "Don't Start Now",
+                    "artist": {"name": "Dua Lipa"},
+                    "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/6c6d5e1e9caeb3b8d5f99b96c9e5b5a8/250x250-000000-80-0-0.jpg"},
+                    "preview": "https://cdns-preview-4.dzcdn.net/stream/c-4b2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
+                },
+                {
+                    "title": "Watermelon Sugar",
+                    "artist": {"name": "Harry Styles"},
+                    "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/8b58c5f5e5e5e5e5e5e5e5e5e5e5e5e5/250x250-000000-80-0-0.jpg"},
+                    "preview": "https://cdns-preview-3.dzcdn.net/stream/c-3b2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
+                },
+                {
+                    "title": "As It Was",
                     "artist": {"name": "Harry Styles"},
                     "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/8b58c5f5e5e5e5e5e5e5e5e5e5e5e5e5/250x250-000000-80-0-0.jpg"},
                     "preview": "https://cdns-preview-3.dzcdn.net/stream/c-3b2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
@@ -620,6 +673,24 @@
                     "artist": {"name": "Nirvana"},
                     "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/8b58c5f5e5e5e5e5e5e5e5e5e5e5e5e5/250x250-000000-80-0-0.jpg"},
                     "preview": "https://cdns-preview-2.dzcdn.net/stream/c-2b2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
+                },
+                {
+                    "title": "Hotel California",
+                    "artist": {"name": "Eagles"},
+                    "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/8b58c5f5e5e5e5e5e5e5e5e5e5e5e5e5/250x250-000000-80-0-0.jpg"},
+                    "preview": "https://cdns-preview-0.dzcdn.net/stream/c-0b2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
+                },
+                {
+                    "title": "Stairway to Heaven",
+                    "artist": {"name": "Led Zeppelin"},
+                    "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/8b58c5f5e5e5e5e5e5e5e5e5e5e5e5e5/250x250-000000-80-0-0.jpg"},
+                    "preview": "https://cdns-preview-1.dzcdn.net/stream/c-1b2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
+                },
+                {
+                    "title": "Back In Black",
+                    "artist": {"name": "AC/DC"},
+                    "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/8b58c5f5e5e5e5e5e5e5e5e5e5e5e5e5/250x250-000000-80-0-0.jpg"},
+                    "preview": "https://cdns-preview-2.dzcdn.net/stream/c-2b2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
                 }
             ],
             "hiphop": [
@@ -640,66 +711,24 @@
                     "artist": {"name": "Kendrick Lamar"},
                     "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/8b58c5f5e5e5e5e5e5e5e5e5e5e5e5e5/250x250-000000-80-0-0.jpg"},
                     "preview": "https://cdns-preview-8.dzcdn.net/stream/c-8b2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
-                }
-            ],
-            "electronic": [
-                {
-                    "title": "Strobe",
-                    "artist": {"name": "Deadmau5"},
-                    "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/8b58c5f5e5e5e5e5e5e5e5e5e5e5e5e5/250x250-000000-80-0-0.jpg"},
-                    "preview": "https://cdns-preview-9.dzcdn.net/stream/c-9b2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
                 },
                 {
-                    "title": "Language",
-                    "artist": {"name": "Porter Robinson"},
+                    "title": "Lose Yourself",
+                    "artist": {"name": "Eminem"},
                     "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/8b58c5f5e5e5e5e5e5e5e5e5e5e5e5e5/250x250-000000-80-0-0.jpg"},
-                    "preview": "https://cdns-preview-a.dzcdn.net/stream/c-ab2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
+                    "preview": "https://cdns-preview-6.dzcdn.net/stream/c-6b2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
                 },
                 {
-                    "title": "Sandstorm",
-                    "artist": {"name": "Darude"},
+                    "title": "In Da Club",
+                    "artist": {"name": "50 Cent"},
                     "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/8b58c5f5e5e5e5e5e5e5e5e5e5e5e5e5/250x250-000000-80-0-0.jpg"},
-                    "preview": "https://cdns-preview-b.dzcdn.net/stream/c-bb2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
-                }
-            ],
-            "jazz": [
-                {
-                    "title": "Take Five",
-                    "artist": {"name": "Dave Brubeck"},
-                    "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/8b58c5f5e5e5e5e5e5e5e5e5e5e5e5e5/250x250-000000-80-0-0.jpg"},
-                    "preview": "https://cdns-preview-c.dzcdn.net/stream/c-cb2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
+                    "preview": "https://cdns-preview-7.dzcdn.net/stream/c-7b2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
                 },
                 {
-                    "title": "So What",
-                    "artist": {"name": "Miles Davis"},
+                    "title": "Hotline Bling",
+                    "artist": {"name": "Drake"},
                     "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/8b58c5f5e5e5e5e5e5e5e5e5e5e5e5e5/250x250-000000-80-0-0.jpg"},
-                    "preview": "https://cdns-preview-d.dzcdn.net/stream/c-db2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
-                },
-                {
-                    "title": "Autumn Leaves",
-                    "artist": {"name": "Cannonball Adderley"},
-                    "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/8b58c5f5e5e5e5e5e5e5e5e5e5e5e5e5/250x250-000000-80-0-0.jpg"},
-                    "preview": "https://cdns-preview-e.dzcdn.net/stream/c-eb2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
-                }
-            ],
-            "all": [
-                {
-                    "title": "Blinding Lights",
-                    "artist": {"name": "The Weeknd"},
-                    "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/eca36a5b5ee6c868366ac4d8a4c6c4ec/250x250-000000-80-0-0.jpg"},
-                    "preview": "https://cdns-preview-5.dzcdn.net/stream/c-5b8cbfe5a5e8aeb6fa5b0e3bf52c5c2f-6.mp3"
-                },
-                {
-                    "title": "Save Your Tears",
-                    "artist": {"name": "The Weeknd"},
-                    "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/eca36a5b5ee6c868366ac4d8a4c6c4ec/250x250-000000-80-0-0.jpg"},
-                    "preview": "https://cdns-preview-5.dzcdn.net/stream/c-5b8cbfe5a5e8aeb6fa5b0e3bf52c5c2f-6.mp3"
-                },
-                {
-                    "title": "Levitating",
-                    "artist": {"name": "Dua Lipa"},
-                    "album": {"cover_medium": "https://e-cdns-images.dzcdn.net/images/cover/6c6d5e1e9caeb3b8d5f99b96c9e5b5a8/250x250-000000-80-0-0.jpg"},
-                    "preview": "https://cdns-preview-4.dzcdn.net/stream/c-4b2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
+                    "preview": "https://cdns-preview-8.dzcdn.net/stream/c-8b2e5f2c1e6b5a8a8c5b0e3bf52c5c2f-6.mp3"
                 }
             ]
         };
@@ -746,18 +775,24 @@
             
             currentTrack = track;
             audioPlayer.src = track.preview;
+            
+            // Reset player UI
+            playButton.innerHTML = '<i class="fas fa-play-circle"></i>';
+            isPlaying = false;
+            
+            // Load the audio
+            audioPlayer.load();
+            
+            // Set track info
+            currentTrackName.textContent = track.title;
+            currentArtistName.textContent = track.artist.name;
+            currentTrackCover.style.backgroundImage = `url(${track.album.cover_medium})`;
+            
+            // Play the track
             audioPlayer.play()
                 .then(() => {
                     isPlaying = true;
                     playButton.innerHTML = '<i class="fas fa-pause-circle"></i>';
-                    currentTrackName.textContent = track.title;
-                    currentArtistName.textContent = track.artist.name;
-                    currentTrackCover.style.backgroundImage = `url(${track.album.cover_medium})`;
-                    
-                    // Set total time when metadata is loaded
-                    audioPlayer.addEventListener('loadedmetadata', () => {
-                        totalTimeDisplay.textContent = formatTime(audioPlayer.duration);
-                    });
                 })
                 .catch(error => {
                     console.error('Playback failed:', error);
@@ -788,7 +823,7 @@
         async function fetchTracksByGenre(genre, limit = 6) {
             try {
                 // Simulate API call with timeout
-                await new Promise(resolve => setTimeout(resolve, 800));
+                await new Promise(resolve => setTimeout(resolve, 500));
                 
                 // Return our local music data
                 if (musicData[genre]) {
@@ -905,6 +940,9 @@
                 const duration = audioPlayer.duration;
                 audioPlayer.currentTime = (clickX / progressWidth) * duration;
             });
+            
+            // Set initial cover for player
+            currentTrackCover.style.backgroundImage = "url('https://e-cdns-images.dzcdn.net/images/cover/eca36a5b5ee6c868366ac4d8a4c6c4ec/250x250-000000-80-0-0.jpg')";
         });
     </script>
 </body>
