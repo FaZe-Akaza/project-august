@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music News Hub | Top Music News & Releases</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #1db954;
+            --dark: #121212;
+            --light: #f8f8f8;
+            --gray: #282828;
+            --text: #b3b3b3;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: rgba(18, 18, 18, 0.95);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo i {
+            color: var(--primary);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 16px;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: var(--gray);
+            border-radius: 30px;
+            padding: 8px 15px;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: var(--light);
+            outline: none;
+            width: 200px;
+        }
+
+        .search-box i {
+            color: var(--text);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 0;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .hero p {
+            font-size: 20px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: #eee;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #1ed760;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Section Styles */
+        section {
+            padding: 50px 0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: var(--light);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+        }
+
+        .view-all {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* News Grid */
+        .news-grid, .releases-grid, .hits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .news-card, .release-card, .hit-card {
+            background: var(--gray);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .news-card:hover, .release-card:hover, .hit-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-img {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .news-card:hover .card-img img {
+            transform: scale(1.1);
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-content h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .card-content p {
+            color: var(--text);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text);
+            font-size: 12px;
+        }
+
+        /* Top Hits */
+        .hit-card {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .hit-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-right: 15px;
+            min-width: 30px;
+        }
+
+        .hit-info {
+            flex-grow: 1;
+        }
+
+        .hit-info h3 {
+            margin-bottom: 5px;
+        }
+
+        .hit-info p {
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        /* Newsletter */
+        .newsletter {
+            background: var(--gray);
+            padding: 60px 0;
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .newsletter h2 {
+            margin-bottom: 20px;
+        }
+
+        .newsletter p {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            color: var(--text);
+        }
+
+        .newsletter-form {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .newsletter-form input {
+            flex-grow: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 30px 0 0 30px;
+            outline: none;
+        }
+
+        .newsletter-form button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: 0 30px 30px 0;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        footer {
+            background: #000;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            color: var(--light);
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column a {
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: var(--primary);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--gray);
+            border-radius: 50%;
+            color: var(--light);
+            transition: all 0.3s;
+        }
+
+        .social-icons a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            color: var(--text);
+            padding-top: 30px;
+            border-top: 1px solid #333;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav ul {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .news-grid, .releases-grid, .hits-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .newsletter-form {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .newsletter-form input,
+            .newsletter-form button {
+                border-radius: 30px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-music"></i>
+                    <span>Music News Hub</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">News</a></li>
+                        <li><a href="#">Releases</a></li>
+                        <li><a href="#">Charts</a></li>
+                        <li><a href="#">Artists</a></li>
+                    </ul>
+                </nav>
+                <div class="search-box">
+                    <input type="text" placeholder="Search artists, news...">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Discover the Latest in Music</h1>
+            <p>Your ultimate source for top music news, new releases, chart-topping hits, and exclusive artist features.</p>
+            <a href="#" class="btn">Explore Latest News</a>
+        </div>
+    </section>
+
+    <!-- Top Music News -->
+    <section class="top-news">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Top Music News</h2>
+                <a href="#" class="view-all">View All</a>
+            </div>
+            <div class="news-grid">
+                <div class="news-card">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="News Image">
+                    </div>
+                    <div class="card-content">
+                        <h3>Taylor Swift Announces New World Tour</h3>
+                        <p>Global superstar Taylor Swift has just announced her largest world tour yet, spanning 5 continents and over 100 shows.</p>
+                        <div class="meta">
+                            <span><i class="far fa-clock"></i> 2 hours ago</span>
+                            <span><i class="far fa-comment"></i> 142 comments</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="news-card">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1511735111819-9a3f7709049c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="News Image">
+                    </div>
+                    <div class="card-content">
+                        <h3>Grammy Awards 2023: Complete Winners List</h3>
+                        <p>The most prestigious night in music celebrated the year's best artists. See who took home the golden gramophones.</p>
+                        <div class="meta">
+                            <span><i class="far fa-clock"></i> 1 day ago</span>
+                            <span><i class="far fa-comment"></i> 87 comments</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="news-card">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="News Image">
+                    </div>
+                    <div class="card-content">
+                        <h3>Coachella 2023 Lineup: Biggest Surprises and Omissions</h3>
+                        <p>The iconic festival has announced its lineup for the upcoming edition. See which artists made the cut and who was surprisingly left out.</p>
+                        <div class="meta">
+                            <span><i class="far fa-clock"></i> 3 days ago</span>
+                            <span><i class="far fa-comment"></i> 216 comments</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- New Releases -->
+    <section class="new-releases">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">New Releases</h2>
+                <a href="#" class="view-all">View All</a>
+            </div>
+            <div class="releases-grid">
+                <div class="release-card">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1571330735066-03aaa9429d89?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Album Cover">
+                    </div>
+                    <div class="card-content">
+                        <h3>Midnights (The Til Dawn Edition)</h3>
+                        <p>Taylor Swift</p>
+                        <div class="meta">
+                            <span>Pop</span>
+                            <span>Released: May 26, 2023</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="release-card">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Album Cover">
+                    </div>
+                    <div class="card-content">
+                        <h3>Utopia</h3>
+                        <p>Travis Scott</p>
+                        <div class="meta">
+                            <span>Hip-Hop</span>
+                            <span>Released: May 22, 2023</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="release-card">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Album Cover">
+                    </div>
+                    <div class="card-content">
+                        <h3>The Show</h3>
+                        <p>Niall Horan</p>
+                        <div class="meta">
+                            <span>Pop</span>
+                            <span>Released: May 20, 2023</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Hits -->
+    <section class="top-hits">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Global Top 10</h2>
+                <a href="#" class="view-all">View Full Chart</a>
+            </div>
+            <div class="hits-grid">
+                <div class="hit-card">
+                    <div class="hit-number">1</div>
+                    <div class="hit-info">
+                        <h3>Flowers</h3>
+                        <p>Miley Cyrus</p>
+                    </div>
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="hit-card">
+                    <div class="hit-number">2</div>
+                    <div class="hit-info">
+                        <h3>Kill Bill</h3>
+                        <p>SZA</p>
+                    </div>
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="hit-card">
+                    <div class="hit-number">3</div>
+                    <div class="hit-info">
+                        <h3>Calm Down</h3>
+                        <p>Rema & Selena Gomez</p>
+                    </div>
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="hit-card">
+                    <div class="hit-number">4</div>
+                    <div class="hit-info">
+                        <h3>Creepin'</h3>
+                        <p>Metro Boomin, The Weeknd, 21 Savage</p>
+                    </div>
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="hit-card">
+                    <div class="hit-number">5</div>
+                    <div class="hit-info">
+                        <h3>Unholy</h3>
+                        <p>Sam Smith & Kim Petras</p>
+                    </div>
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter">
+        <div class="container">
+            <h2>Stay Updated with Music News</h2>
+            <p>Subscribe to our newsletter and never miss updates on new releases, top charts, and music news.</p>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Your email address">
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Music News Hub</h3>
+                    <p>Your ultimate source for the latest music news, releases, and charts.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Explore</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">News</a></li>
+                        <li><a href="#">Releases</a></li>
+                        <li><a href="#">Charts</a></li>
+                        <li><a href="#">Artists</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Information</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Music Street, Los Angeles, CA</li>
+                        <li><i class="fas fa-phone"></i> +1 (234) 567-8900</li>
+                        <li><i class="fas fa-envelope"></i> info@musicnewshub.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Music News Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simulated API data fetching
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Website loaded. In a real implementation, we would fetch data from music APIs here.');
+            
+            // Simulated API data
+            const simulatedNews = [
+                {
+                    title: "Beyoncé Announces Renaissance World Tour Extension",
+                    image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    excerpt: "Due to overwhelming demand, Beyoncé has added 10 new dates to her highly successful Renaissance World Tour.",
+                    time: "4 hours ago",
+                    comments: 89
+                },
+                {
+                    title: "Drake Teases New Album 'For All The Dogs'",
+                    image: "https://images.unsplash.com/photo-1511735111819-9a3f7709049c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                    excerpt: "Drake has been hinting at his upcoming album 'For All The Dogs' through social media and during tour performances.",
+                    time: "1 day ago",
+                    comments: 142
+                }
+            ];
+            
+            // In a real implementation, we would use this data to dynamically populate the page
+            // For now, we'll just log it
+            console.log('Simulated news data:', simulatedNews);
+            
+            // You would integrate with real APIs like:
+            // - Spotify API for new releases and top charts
+            // - News API for music news
+            // - Last.fm or MusicBrainz for artist information
+            
+            // Example of how you might fetch data from a real API (commented out):
+            /*
+            fetch('https://api.spotify.com/v1/browse/new-releases', {
+                headers: {
+                    'Authorization': 'Bearer YOUR_ACCESS_TOKEN'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('New releases:', data);
+                // Process and display the data
+            })
+            .catch(error => {
+                console.error('Error fetching new releases:', error);
+            });
+            */
+        });
+    </script>
+</body>
+</html>
