@@ -6,6 +6,7 @@
     <title>Spotify Clone</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Your existing CSS remains the same */
         * {
             margin: 0;
             padding: 0;
@@ -370,6 +371,34 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Genre filter */
+        .genre-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .genre-button {
+            background-color: #282828;
+            color: var(--text-primary);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .genre-button:hover {
+            background-color: #333;
+        }
+
+        .genre-button.active {
+            background-color: var(--highlight);
+            color: black;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .container {
@@ -391,6 +420,11 @@
             .player-controls {
                 width: 50%;
             }
+            
+            .genre-filter {
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
         }
     </style>
 </head>
@@ -403,15 +437,15 @@
                 <span>Spotify</span>
             </div>
             
-            <div class="nav-item active">
+            <div class="nav-item active" data-section="featured">
                 <i class="fas fa-home"></i>
                 <span>Home</span>
             </div>
-            <div class="nav-item">
+            <div class="nav-item" data-section="search">
                 <i class="fas fa-search"></i>
                 <span>Search</span>
             </div>
-            <div class="nav-item">
+            <div class="nav-item" data-section="library">
                 <i class="fas fa-book"></i>
                 <span>Your Library</span>
             </div>
@@ -429,14 +463,13 @@
             
             <div class="divider"></div>
             
-            <div class="playlists">
-                <div class="nav-item">My Playlist #1</div>
-                <div class="nav-item">My Playlist #2</div>
-                <div class="nav-item">Discover Weekly</div>
-                <div class="nav-item">Release Radar</div>
-                <div class="nav-item">Chill Mix</div>
-                <div class="nav-item">Rock Classics</div>
-                <div class="nav-item">Summer Hits</div>
+            <div class="playlists" id="genre-playlists">
+                <div class="nav-item" data-genre="pop">Pop Hits</div>
+                <div class="nav-item" data-genre="rock">Rock Classics</div>
+                <div class="nav-item" data-genre="hiphop">Hip-Hop Essentials</div>
+                <div class="nav-item" data-genre="electronic">Electronic Dance</div>
+                <div class="nav-item" data-genre="jazz">Jazz Collection</div>
+                <div class="nav-item" data-genre="reggae">Reggae Vibes</div>
             </div>
         </div>
         
@@ -458,15 +491,25 @@
                 </div>
             </div>
             
-            <h2 class="section-title">Recently Played</h2>
-            <div id="recently-played" class="album-grid">
+            <div class="genre-filter" id="genre-filter">
+                <button class="genre-button active" data-genre="all">All</button>
+                <button class="genre-button" data-genre="pop">Pop</button>
+                <button class="genre-button" data-genre="rock">Rock</button>
+                <button class="genre-button" data-genre="hiphop">Hip-Hop</button>
+                <button class="genre-button" data-genre="electronic">Electronic</button>
+                <button class="genre-button" data-genre="jazz">Jazz</button>
+                <button class="genre-button" data-genre="reggae">Reggae</button>
+            </div>
+            
+            <h2 class="section-title">Featured Tracks</h2>
+            <div id="featured-tracks" class="album-grid">
                 <div class="loader">
                     <div class="spinner"></div>
                 </div>
             </div>
             
-            <h2 class="section-title">Made For You</h2>
-            <div id="made-for-you" class="album-grid">
+            <h2 class="section-title">Recommended For You</h2>
+            <div id="recommended-tracks" class="album-grid">
                 <div class="loader">
                     <div class="spinner"></div>
                 </div>
@@ -523,96 +566,18 @@
     <audio id="audio-player"></audio>
 
     <script>
-        // Music data with real album covers and preview URLs
-        const musicData = {
-            "recentlyPlayed": [
-                {
-                    "title": "Blinding Lights",
-                    "artist": "The Weeknd",
-                    "album": "After Hours",
-                    "cover": "https://upload.wikimedia.org/wikipedia/en/c/c1/The_Weeknd_-_After_Hours.png",
-                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
-                },
-                {
-                    "title": "Don't Start Now",
-                    "artist": "Dua Lipa",
-                    "album": "Future Nostalgia",
-                    "cover": "https://upload.wikimedia.org/wikipedia/en/f/f5/Dua_Lipa_-_Future_Nostalgia_%28Official_Album_Cover%29.png",
-                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
-                },
-                {
-                    "title": "Watermelon Sugar",
-                    "artist": "Harry Styles",
-                    "album": "Fine Line",
-                    "cover": "https://upload.wikimedia.org/wikipedia/en/3/3b/Harry_Styles_-_Fine_Line.png",
-                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
-                },
-                {
-                    "title": "Dynamite",
-                    "artist": "BTS",
-                    "album": "Dynamite (Single)",
-                    "cover": "https://upload.wikimedia.org/wikipedia/en/6/6b/BTS_-_Dynamite_%28official_cover%29.png",
-                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
-                },
-                {
-                    "title": "Levitating",
-                    "artist": "Dua Lipa ft. DaBaby",
-                    "album": "Future Nostalgia",
-                    "cover": "https://upload.wikimedia.org/wikipedia/en/f/f5/Dua_Lipa_-_Future_Nostalgia_%28Official_Album_Cover%29.png",
-                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
-                },
-                {
-                    "title": "Save Your Tears",
-                    "artist": "The Weeknd",
-                    "album": "After Hours",
-                    "cover": "https://upload.wikimedia.org/wikipedia/en/c/c1/The_Weeknd_-_After_Hours.png",
-                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
-                }
-            ],
-            "madeForYou": [
-                {
-                    "title": "Good 4 U",
-                    "artist": "Olivia Rodrigo",
-                    "album": "SOUR",
-                    "cover": "https://upload.wikimedia.org/wikipedia/en/2/2c/Olivia_Rodrigo_-_SOUR.png",
-                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
-                },
-                {
-                    "title": "Stay",
-                    "artist": "The Kid LAROI & Justin Bieber",
-                    "album": "F*CK LOVE 3: OVER YOU",
-                    "cover": "https://upload.wikimedia.org/wikipedia/en/9/9b/The_Kid_Laroi_-_F%2A%2A%2A_Love_3%2B.png",
-                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
-                },
-                {
-                    "title": "Industry Baby",
-                    "artist": "Lil Nas X & Jack Harlow",
-                    "album": "MONTERO",
-                    "cover": "https://upload.wikimedia.org/wikipedia/en/5/5d/Lil_Nas_X_-_Montero_%28Official_Album_Cover%29.png",
-                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
-                },
-                {
-                    "title": "Shivers",
-                    "artist": "Ed Sheeran",
-                    "album": "=",
-                    "cover": "https://upload.wikimedia.org/wikipedia/en/2/2a/Ed_Sheeran_-_Equals.png",
-                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
-                },
-                {
-                    "title": "Heat Waves",
-                    "artist": "Glass Animals",
-                    "album": "Dreamland",
-                    "cover": "https://upload.wikimedia.org/wikipedia/en/2/2a/Glass_Animals_-_Dreamland.png",
-                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
-                },
-                {
-                    "title": "Easy On Me",
-                    "artist": "Adele",
-                    "album": "30",
-                    "cover": "https://upload.wikimedia.org/wikipedia/en/0/08/Adele_-_30_cover.jpg",
-                    "preview": "https://cdn.freesound.org/previews/631/631153_11861866-lq.mp3"
-                }
-            ]
+        // Music API integration using Deezer API
+        const DEEZER_API_BASE = 'https://api.deezer.com';
+        
+        // Genre mapping to Deezer genre IDs
+        const GENRE_MAPPING = {
+            'pop': 132,
+            'rock': 152,
+            'hiphop': 116,
+            'electronic': 106,
+            'jazz': 129,
+            'reggae': 144,
+            'all': 0
         };
 
         // Audio player setup
@@ -626,9 +591,13 @@
         const currentTrackName = document.getElementById('current-track-name');
         const currentArtistName = document.getElementById('current-artist-name');
         const currentTrackCover = document.getElementById('current-track-cover');
+        const genreFilter = document.getElementById('genre-filter');
+        const genrePlaylists = document.getElementById('genre-playlists');
 
         let currentTrack = null;
         let isPlaying = false;
+        let currentPlaylist = [];
+        let currentGenre = 'all';
 
         // Format time in minutes:seconds
         function formatTime(seconds) {
@@ -648,19 +617,37 @@
 
         // Play a track
         function playTrack(track) {
+            if (!track.preview) {
+                alert('Sorry, preview is not available for this track');
+                return;
+            }
+            
             currentTrack = track;
             audioPlayer.src = track.preview;
-            audioPlayer.play();
-            isPlaying = true;
-            playButton.innerHTML = '<i class="fas fa-pause-circle"></i>';
-            currentTrackName.textContent = track.title;
-            currentArtistName.textContent = track.artist;
-            currentTrackCover.style.backgroundImage = `url(${track.cover})`;
-            totalTimeDisplay.textContent = formatTime(audioPlayer.duration);
+            audioPlayer.play()
+                .then(() => {
+                    isPlaying = true;
+                    playButton.innerHTML = '<i class="fas fa-pause-circle"></i>';
+                    currentTrackName.textContent = track.title;
+                    currentArtistName.textContent = track.artist.name;
+                    currentTrackCover.style.backgroundImage = `url(${track.album.cover_medium})`;
+                    totalTimeDisplay.textContent = formatTime(audioPlayer.duration);
+                })
+                .catch(error => {
+                    console.error('Playback failed:', error);
+                    alert('Could not play this track. Please try another one.');
+                });
         }
 
         // Toggle play/pause
         function togglePlay() {
+            if (!currentTrack) {
+                if (currentPlaylist.length > 0) {
+                    playTrack(currentPlaylist[0]);
+                }
+                return;
+            }
+            
             if (isPlaying) {
                 audioPlayer.pause();
                 playButton.innerHTML = '<i class="fas fa-play-circle"></i>';
@@ -671,39 +658,157 @@
             isPlaying = !isPlaying;
         }
 
-        // Event listeners
-        audioPlayer.addEventListener('timeupdate', updateProgress);
-        audioPlayer.addEventListener('ended', () => {
-            isPlaying = false;
-            playButton.innerHTML = '<i class="fas fa-play-circle"></i>';
-        });
-        playButton.addEventListener('click', togglePlay);
+        // Fetch tracks by genre
+        async function fetchTracksByGenre(genre, limit = 12) {
+            try {
+                let url;
+                if (genre === 'all') {
+                    // Get popular tracks across all genres
+                    url = `${DEEZER_API_BASE}/chart/0/tracks?limit=${limit}`;
+                } else {
+                    const genreId = GENRE_MAPPING[genre];
+                    url = `${DEEZER_API_BASE}/genre/${genreId}/artists?limit=5`;
+                    
+                    // First get artists in this genre
+                    const artistsResponse = await fetch(url);
+                    const artistsData = await artistsResponse.json();
+                    
+                    if (!artistsData.data || artistsData.data.length === 0) {
+                        return [];
+                    }
+                    
+                    // Then get top tracks from these artists
+                    const artistPromises = artistsData.data.slice(0, 3).map(artist => 
+                        fetch(`${DEEZER_API_BASE}/artist/${artist.id}/top?limit=5`).then(res => res.json())
+                    );
+                    
+                    const topTracksData = await Promise.all(artistPromises);
+                    
+                    // Combine and shuffle tracks
+                    const allTracks = topTracksData.flatMap(data => data.data || []);
+                    const shuffled = allTracks.sort(() => 0.5 - Math.random());
+                    return shuffled.slice(0, limit);
+                }
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                return data.data || [];
+            } catch (error) {
+                console.error('Error fetching tracks:', error);
+                return [];
+            }
+        }
+
+        // Fetch featured tracks (popular tracks)
+        async function fetchFeaturedTracks(limit = 6) {
+            try {
+                const response = await fetch(`${DEEZER_API_BASE}/chart/0/tracks?limit=${limit}`);
+                const data = await response.json();
+                return data.data || [];
+            } catch (error) {
+                console.error('Error fetching featured tracks:', error);
+                return [];
+            }
+        }
 
         // Render album cards
         function renderAlbumCards(containerId, tracks) {
             const container = document.getElementById(containerId);
+            
+            if (!tracks || tracks.length === 0) {
+                container.innerHTML = '<div class="no-tracks">No tracks found. Try another genre.</div>';
+                return;
+            }
+            
             container.innerHTML = '';
             
             tracks.forEach(track => {
+                if (!track) return;
+                
                 const card = document.createElement('div');
                 card.className = 'album-card';
                 card.innerHTML = `
-                    <div class="album-cover" style="background-image: url(${track.cover})"></div>
-                    <div class="album-title">${track.title}</div>
-                    <div class="album-artist">${track.artist}</div>
+                    <div class="album-cover" style="background-image: url(${track.album.cover_medium})"></div>
+                    <div class="album-title">${track.title_short || track.title}</div>
+                    <div class="album-artist">${track.artist.name}</div>
                 `;
                 card.addEventListener('click', () => playTrack(track));
                 container.appendChild(card);
             });
         }
 
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', () => {
-            renderAlbumCards('recently-played', musicData.recentlyPlayed);
-            renderAlbumCards('made-for-you', musicData.madeForYou);
+        // Update UI based on selected genre
+        async function updateGenre(genre) {
+            currentGenre = genre;
             
-            // Set the first track as default
-            currentTrackCover.style.backgroundImage = `url(${musicData.recentlyPlayed[0].cover})`;
+            // Update active button state
+            document.querySelectorAll('.genre-button').forEach(button => {
+                button.classList.toggle('active', button.dataset.genre === genre);
+            });
+            
+            // Show loading state
+            document.getElementById('featured-tracks').innerHTML = `
+                <div class="loader">
+                    <div class="spinner"></div>
+                </div>
+            `;
+            
+            document.getElementById('recommended-tracks').innerHTML = `
+                <div class="loader">
+                    <div class="spinner"></div>
+                </div>
+            `;
+            
+            // Fetch and display tracks for the selected genre
+            const featuredTracks = await fetchTracksByGenre(genre, 6);
+            const recommendedTracks = await fetchTracksByGenre(genre, 6);
+            
+            currentPlaylist = [...featuredTracks, ...recommendedTracks];
+            
+            renderAlbumCards('featured-tracks', featuredTracks);
+            renderAlbumCards('recommended-tracks', recommendedTracks);
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Set up event listeners
+            playButton.addEventListener('click', togglePlay);
+            
+            // Set up genre filter buttons
+            genreFilter.querySelectorAll('.genre-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    updateGenre(button.dataset.genre);
+                });
+            });
+            
+            // Set up genre playlist buttons in sidebar
+            genrePlaylists.querySelectorAll('.nav-item').forEach(item => {
+                if (item.dataset.genre) {
+                    item.addEventListener('click', () => {
+                        updateGenre(item.dataset.genre);
+                    });
+                }
+            });
+            
+            // Load initial content
+            await updateGenre('all');
+            
+            // Set up audio player events
+            audioPlayer.addEventListener('timeupdate', updateProgress);
+            audioPlayer.addEventListener('ended', () => {
+                isPlaying = false;
+                playButton.innerHTML = '<i class="fas fa-play-circle"></i>';
+            });
+            
+            // Set up progress bar click to seek
+            document.querySelector('.progress').addEventListener('click', (e) => {
+                if (!audioPlayer.duration) return;
+                
+                const progressWidth = e.target.clientWidth;
+                const clickX = e.offsetX;
+                const duration = audioPlayer.duration;
+                audioPlayer.currentTime = (clickX / progressWidth) * duration;
+            });
         });
     </script>
 </body>
