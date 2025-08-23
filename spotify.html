@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Spotify Clone</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <title>Spotify Clone (Covers + Real‑time Previews)</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
@@ -32,447 +32,364 @@
     .main-content { padding: 20px 30px; overflow-y: auto; background: linear-gradient(180deg, #2d1b69 0%, #121212 20%); }
     .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background-color: var(--topbar-bg); padding: 16px 30px; border-radius: 8px; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
     .navigation-buttons { display: flex; gap: 15px; }
-    .nav-button { background-color: rgba(0, 0, 0, 0.5); color: var(--text-primary); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .user-menu { display: flex; align-items: center; gap: 10px; background-color: rgba(0, 0, 0, 0.7); padding: 8px 12px; border-radius: 20px; cursor: pointer; transition: all 0.2s; }
-    .user-menu:hover { background-color: #282828; }
-    .user-avatar { width: 28px; height: 28px; border-radius: 50%; background-color: #7648d0; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+    .nav-button { background-color: rgba(0,0,0,0.5); color: var(--text-primary); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
-    .section-title { font-size: 24px; margin-bottom: 20px; font-weight: 700; }
-    .album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; margin-bottom: 30px; }
-    .album-card { background-color: var(--card-bg); border-radius: 8px; padding: 16px; transition: all 0.3s; cursor: pointer; }
-    .album-card:hover { background-color: #333; transform: translateY(-5px); }
-    .album-cover { width: 100%; aspect-ratio: 1; border-radius: 5px; margin-bottom: 15px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); background-size: cover; background-position: center; }
-    .album-title { font-weight: bold; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .album-artist { color: var(--text-secondary); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .section-title { font-size: 24px; margin-bottom: 14px; font-weight: 700; }
+    .controls-row { display: flex; gap: 10px; align-items: center; margin-bottom: 18px; flex-wrap: wrap; }
+    .pill { background:#282828; color:#fff; border:0; padding:8px 14px; border-radius: 999px; cursor:pointer; font-size:14px; }
+    .pill.active { background: var(--highlight); color:#000; }
+
+    .album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; margin-bottom: 26px; }
+    .album-card { background-color: var(--card-bg); border-radius: 10px; padding: 14px; transition: transform .2s, background .2s; cursor: pointer; }
+    .album-card:hover { background-color: #333; transform: translateY(-4px); }
+    .album-cover { width: 100%; aspect-ratio: 1; border-radius: 6px; margin-bottom: 12px; background-size: cover; background-position: center; box-shadow: 0 8px 16px rgba(0,0,0,.3); }
+    .album-title { font-weight: 700; font-size: 15px; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .album-artist { color: var(--text-secondary); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .badges { display:flex; gap:6px; margin-top:8px; }
+    .badge { font-size:10px; background:#1a1a1a; color:#bfbfbf; padding:3px 6px; border-radius:999px; border:1px solid #2b2b2b; }
 
     /* Player */
-    .player { background-color: var(--player-bg); border-top: 1px solid #282828; padding: 15px 30px; display: flex; align-items: center; justify-content: space-between; }
+    .player { background-color: var(--player-bg); border-top: 1px solid #282828; padding: 15px 30px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
     .current-track { display: flex; align-items: center; gap: 15px; width: 30%; }
     .track-info { display: flex; flex-direction: column; }
-    .track-name { font-size: 14px; font-weight: 500; }
+    .track-name { font-size: 14px; font-weight: 600; }
     .artist-name { font-size: 12px; color: var(--text-secondary); }
-    .small-cover { width: 56px; height: 56px; border-radius: 5px; background-size: cover; background-position: center; }
+    .small-cover { width: 56px; height: 56px; border-radius: 6px; background-size: cover; background-position: center; }
 
     .player-controls { display: flex; flex-direction: column; align-items: center; width: 40%; }
-    .control-buttons { display: flex; align-items: center; gap: 20px; margin-bottom: 10px; }
-    .control-button { color: var(--text-secondary); border: none; background: transparent; font-size: 16px; cursor: pointer; transition: all 0.2s; }
+    .control-buttons { display: flex; align-items: center; gap: 18px; margin-bottom: 10px; }
+    .control-button { color: var(--text-secondary); border: none; background: transparent; font-size: 16px; cursor: pointer; transition: color .2s, transform .2s; }
     .control-button:hover { color: var(--text-primary); }
     .control-button.play { color: var(--text-primary); font-size: 32px; }
-    .control-button.play:hover { transform: scale(1.1); }
+    .control-button.play:hover { transform: scale(1.05); }
 
     .progress-bar { display: flex; align-items: center; gap: 10px; width: 100%; }
-    .progress-time { font-size: 12px; color: var(--text-secondary); }
+    .progress-time { font-size: 12px; color: var(--text-secondary); width: 40px; text-align: center; }
     .progress { flex-grow: 1; height: 4px; background-color: #535353; border-radius: 2px; position: relative; cursor: pointer; }
     .progress-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background-color: var(--text-primary); border-radius: 2px; }
     .progress-fill:hover { background-color: var(--highlight); }
 
     .volume-controls { display: flex; align-items: center; gap: 10px; width: 30%; justify-content: flex-end; }
-    .volume-icon { color: var(--text-secondary); }
-    .volume-bar { width: 100px; height: 4px; background-color: #535353; border-radius: 2px; position: relative; cursor: pointer; }
+    .volume-bar { width: 120px; height: 4px; background-color: #535353; border-radius: 2px; position: relative; cursor: pointer; }
     .volume-fill { position: absolute; left: 0; top: 0; height: 100%; width: 70%; background-color: var(--text-primary); border-radius: 2px; }
 
-    /* Misc */
-    .loader { display: flex; justify-content: center; align-items: center; height: 200px; }
-    .loader .spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-left-color: var(--highlight); border-radius: 50%; animation: spin 1s linear infinite; }
+    .loader { display: flex; justify-content: center; align-items: center; height: 160px; }
+    .spinner { width: 36px; height: 36px; border: 4px solid rgba(255,255,255,.12); border-left-color: var(--highlight); border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    .genre-filter { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-    .genre-button { background-color: #282828; color: var(--text-primary); border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 14px; transition: all 0.2s; }
-    .genre-button:hover { background-color: #333; }
-    .genre-button.active { background-color: var(--highlight); color: black; }
     .no-tracks { grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-secondary); }
 
-    @media (max-width: 768px) {
+    @media (max-width: 860px) {
       .container { grid-template-columns: 1fr; }
       .sidebar { display: none; }
       .album-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
       .current-track, .volume-controls { width: 25%; }
       .player-controls { width: 50%; }
-      .genre-filter { overflow-x: auto; padding-bottom: 10px; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <!-- Sidebar -->
-    <div class="sidebar">
+    <aside class="sidebar">
       <div class="logo"><i class="fab fa-spotify"></i><span>Spotify</span></div>
-      <div class="nav-item active" data-section="featured"><i class="fas fa-home"></i><span>Home</span></div>
-      <div class="nav-item" data-section="search"><i class="fas fa-search"></i><span>Search</span></div>
-      <div class="nav-item" data-section="library"><i class="fas fa-book"></i><span>Your Library</span></div>
-
+      <div class="nav-item active"><i class="fas fa-home"></i><span>Home</span></div>
+      <div class="nav-item"><i class="fas fa-search"></i><span>Search</span></div>
+      <div class="nav-item"><i class="fas fa-book"></i><span>Your Library</span></div>
       <div class="library">
         <div class="nav-item"><i class="fas fa-plus-square"></i><span>Create Playlist</span></div>
         <div class="nav-item"><i class="fas fa-heart"></i><span>Liked Songs</span></div>
       </div>
-
       <div class="divider"></div>
-
       <div class="playlists" id="genre-playlists">
         <div class="nav-item" data-genre="all">All Hits</div>
         <div class="nav-item" data-genre="pop">Pop Hits</div>
         <div class="nav-item" data-genre="rock">Rock Classics</div>
         <div class="nav-item" data-genre="hiphop">Hip-Hop Essentials</div>
       </div>
-    </div>
+    </aside>
 
     <!-- Main Content -->
-    <div class="main-content">
+    <main class="main-content">
       <div class="topbar">
         <div class="navigation-buttons">
           <button class="nav-button"><i class="fas fa-chevron-left"></i></button>
           <button class="nav-button"><i class="fas fa-chevron-right"></i></button>
         </div>
-        <div class="user-menu">
-          <div class="user-avatar">JD</div>
-          <span>John Doe</span>
-          <i class="fas fa-caret-down"></i>
-        </div>
+        <!-- Removed user menu (no John Doe) -->
+        <div style="height:28px"></div>
       </div>
 
-      <div class="genre-filter" id="genre-filter">
-        <button class="genre-button active" data-genre="all">All</button>
-        <button class="genre-button" data-genre="pop">Pop</button>
-        <button class="genre-button" data-genre="rock">Rock</button>
-        <button class="genre-button" data-genre="hiphop">Hip-Hop</button>
+      <div class="controls-row">
+        <button class="pill active" data-genre="all">All</button>
+        <button class="pill" data-genre="pop">Pop</button>
+        <button class="pill" data-genre="rock">Rock</button>
+        <button class="pill" data-genre="hiphop">Hip-Hop</button>
       </div>
 
-      <h2 class="section-title">Featured Tracks</h2>
-      <div id="featured-tracks" class="album-grid">
+      <h2 class="section-title">All Tracks</h2>
+      <div id="tracks-grid" class="album-grid">
         <div class="loader"><div class="spinner"></div></div>
       </div>
-
-      <h2 class="section-title">Recommended For You</h2>
-      <div id="recommended-tracks" class="album-grid">
-        <div class="loader"><div class="spinner"></div></div>
-      </div>
-    </div>
+    </main>
   </div>
 
   <!-- Player -->
-  <div class="player">
+  <footer class="player">
     <div class="current-track">
-      <div class="small-cover" id="current-track-cover"></div>
+      <div class="small-cover" id="current-cover"></div>
       <div class="track-info">
-        <div class="track-name" id="current-track-name">Select a song to play</div>
-        <div class="artist-name" id="current-artist-name">-</div>
+        <div class="track-name" id="current-title">Pick a song</div>
+        <div class="artist-name" id="current-artist">-</div>
       </div>
       <i class="fas fa-heart"></i>
     </div>
 
     <div class="player-controls">
       <div class="control-buttons">
-        <button class="control-button" id="shuffle-button"><i class="fas fa-random"></i></button>
-        <button class="control-button" id="prev-button"><i class="fas fa-step-backward"></i></button>
-        <button class="control-button play" id="play-button"><i class="fas fa-play-circle"></i></button>
-        <button class="control-button" id="next-button"><i class="fas fa-step-forward"></i></button>
-        <button class="control-button" id="repeat-button"><i class="fas fa-repeat"></i></button>
+        <button class="control-button" id="shuffle-btn" title="Shuffle"><i class="fas fa-random"></i></button>
+        <button class="control-button" id="prev-btn" title="Previous"><i class="fas fa-step-backward"></i></button>
+        <button class="control-button play" id="play-btn" title="Play/Pause"><i class="fas fa-play-circle"></i></button>
+        <button class="control-button" id="next-btn" title="Next"><i class="fas fa-step-forward"></i></button>
+        <button class="control-button" id="repeat-btn" title="Repeat"><i class="fas fa-repeat"></i></button>
       </div>
       <div class="progress-bar">
         <span class="progress-time" id="current-time">0:00</span>
-        <div class="progress" id="progress">
-          <div class="progress-fill" id="progress-fill"></div>
-        </div>
+        <div class="progress" id="progress"><div class="progress-fill" id="progress-fill"></div></div>
         <span class="progress-time" id="total-time">0:00</span>
       </div>
     </div>
 
     <div class="volume-controls">
-      <i class="fas fa-volume-up volume-icon" id="volume-icon"></i>
+      <i class="fas fa-volume-up"></i>
       <div class="volume-bar" id="volume-bar"><div class="volume-fill" id="volume-fill"></div></div>
     </div>
-  </div>
+  </footer>
 
-  <audio id="audio-player" crossorigin="anonymous"></audio>
+  <audio id="audio" crossorigin="anonymous"></audio>
 
   <script>
-    // NOTE about Google Images: querying Google Images directly from the browser is blocked by CORS & violates TOS.
-    // Instead, we auto-fetch high‑quality artwork and 30s previews using the free iTunes Search API.
-    // This keeps covers fresh while ensuring tracks play in real time.
+    /**
+     * IMPORTANT: We cannot fetch Google Images directly (CORS + TOS).
+     * Instead, we use the official iTunes Search API to get:
+     *  - accurate titles & artists
+     *  - cover art (up to 512x512)
+     *  - working 30s preview URLs
+     * This guarantees the card description matches what plays.
+     */
 
-    // Seed music data (title + artist). Covers & preview URLs will be fetched.
-    const musicData = {
-      all: [
-        { title: "Blinding Lights", artist: { name: "The Weeknd" } },
-        { title: "Save Your Tears", artist: { name: "The Weeknd" } },
-        { title: "Levitating", artist: { name: "Dua Lipa" } },
-        { title: "Don't Start Now", artist: { name: "Dua Lipa" } },
-        { title: "Watermelon Sugar", artist: { name: "Harry Styles" } },
-        { title: "As It Was", artist: { name: "Harry Styles" } },
-      ],
-      pop: [
-        { title: "Blinding Lights", artist: { name: "The Weeknd" } },
-        { title: "Save Your Tears", artist: { name: "The Weeknd" } },
-        { title: "Levitating", artist: { name: "Dua Lipa" } },
-        { title: "Don't Start Now", artist: { name: "Dua Lipa" } },
-        { title: "Watermelon Sugar", artist: { name: "Harry Styles" } },
-        { title: "As It Was", artist: { name: "Harry Styles" } },
-      ],
-      rock: [
-        { title: "Sweet Child O' Mine", artist: { name: "Guns N' Roses" } },
-        { title: "Bohemian Rhapsody", artist: { name: "Queen" } },
-        { title: "Smells Like Teen Spirit", artist: { name: "Nirvana" } },
-        { title: "Hotel California", artist: { name: "Eagles" } },
-        { title: "Stairway to Heaven", artist: { name: "Led Zeppelin" } },
-        { title: "Back In Black", artist: { name: "AC/DC" } },
-      ],
-      hiphop: [
-        { title: "SICKO MODE", artist: { name: "Travis Scott" } },
-        { title: "God's Plan", artist: { name: "Drake" } },
-        { title: "HUMBLE.", artist: { name: "Kendrick Lamar" } },
-        { title: "Lose Yourself", artist: { name: "Eminem" } },
-        { title: "In Da Club", artist: { name: "50 Cent" } },
-        { title: "Hotline Bling", artist: { name: "Drake" } },
-      ],
-    };
+    const audio = document.getElementById('audio');
+    const tracksGrid = document.getElementById('tracks-grid');
+    const currentCover = document.getElementById('current-cover');
+    const currentTitle = document.getElementById('current-title');
+    const currentArtist = document.getElementById('current-artist');
+    const playBtn = document.getElementById('play-btn');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const shuffleBtn = document.getElementById('shuffle-btn');
+    const repeatBtn = document.getElementById('repeat-btn');
 
-    const audioPlayer = document.getElementById('audio-player');
-    const playButton = document.getElementById('play-button');
     const progress = document.getElementById('progress');
     const progressFill = document.getElementById('progress-fill');
-    const currentTimeDisplay = document.getElementById('current-time');
-    const totalTimeDisplay = document.getElementById('total-time');
-    const currentTrackName = document.getElementById('current-track-name');
-    const currentArtistName = document.getElementById('current-artist-name');
-    const currentTrackCover = document.getElementById('current-track-cover');
-    const genreFilter = document.getElementById('genre-filter');
-    const prevButton = document.getElementById('prev-button');
-    const nextButton = document.getElementById('next-button');
-    const shuffleButton = document.getElementById('shuffle-button');
-    const repeatButton = document.getElementById('repeat-button');
+    const currentTimeEl = document.getElementById('current-time');
+    const totalTimeEl = document.getElementById('total-time');
+
     const volumeBar = document.getElementById('volume-bar');
     const volumeFill = document.getElementById('volume-fill');
 
-    let currentTrack = null;
-    let isPlaying = false;
-    let currentPlaylist = [];
+    const genreButtons = Array.from(document.querySelectorAll('.pill'));
+    const sidebarGenres = Array.from(document.querySelectorAll('#genre-playlists .nav-item[data-genre]'));
+
+    let masterList = [];
+    let filteredList = [];
     let currentIndex = -1;
+    let isPlaying = false;
     let isShuffle = false;
     let isRepeat = false;
-    let currentGenre = 'all';
 
-    function formatTime(seconds) {
-      if (isNaN(seconds)) return '0:00';
-      const mins = Math.floor(seconds / 60);
-      const secs = Math.floor(seconds % 60);
-      return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    function fmt(sec) {
+      if (!Number.isFinite(sec)) return '0:00';
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m}:${s < 10 ? '0' : ''}${s}`;
     }
 
-    function updateProgress() {
-      if (audioPlayer.duration) {
-        const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-        progressFill.style.width = `${percent}%`;
-        currentTimeDisplay.textContent = formatTime(audioPlayer.currentTime);
+    function dedupeBy(list, key) {
+      const seen = new Set();
+      const out = [];
+      for (const item of list) {
+        const k = item[key];
+        if (k && !seen.has(k)) { seen.add(k); out.push(item); }
       }
+      return out;
     }
 
-    function setVolumeFromClick(evt) {
-      const rect = volumeBar.getBoundingClientRect();
-      const ratio = Math.max(0, Math.min(1, (evt.clientX - rect.left) / rect.width));
-      audioPlayer.volume = ratio;
-      volumeFill.style.width = `${ratio * 100}%`;
-    }
-
-    async function enrichTrack(track) {
-      // Query iTunes for cover + preview
-      const term = encodeURIComponent(`${track.title} ${track.artist.name}`);
-      const res = await fetch(`https://itunes.apple.com/search?term=${term}&entity=song&limit=1`);
-      const data = await res.json();
-      if (data.results && data.results.length) {
-        const hit = data.results[0];
-        // Use higher-res artwork by swapping 100x100 to 512x512
-        const highRes = hit.artworkUrl100?.replace('100x100', '512x512');
-        return {
-          ...track,
-          album: { cover_medium: highRes || hit.artworkUrl100 },
-          preview: hit.previewUrl || track.preview || '',
-        };
-      }
-      // Fallback generic cover
-      return {
-        ...track,
-        album: { cover_medium: 'https://dummyimage.com/512x512/282828/ffffff&text=No+Cover' },
-        preview: track.preview || '',
-      };
-    }
-
-    async function enrichTracks(list) {
-      const enriched = await Promise.all(list.map(enrichTrack));
-      return enriched;
-    }
-
-    function renderAlbumCards(containerId, tracks) {
-      const container = document.getElementById(containerId);
-      if (!tracks || tracks.length === 0) {
-        container.innerHTML = '<div class="no-tracks">No tracks found. Try another genre.</div>';
+    function renderGrid(list) {
+      if (!list.length) {
+        tracksGrid.innerHTML = '<div class="no-tracks">No tracks found. Try another filter.</div>';
         return;
       }
-      container.innerHTML = '';
-      tracks.forEach((track, idx) => {
+      tracksGrid.innerHTML = '';
+      list.forEach((t, idx) => {
         const card = document.createElement('div');
         card.className = 'album-card';
         card.innerHTML = `
-          <div class="album-cover" style="background-image: url(${track.album.cover_medium})"></div>
-          <div class="album-title">${track.title}</div>
-          <div class="album-artist">${track.artist.name}</div>
+          <div class="album-cover" style="background-image:url(${t.cover})"></div>
+          <div class="album-title" title="${t.title}">${t.title}</div>
+          <div class="album-artist" title="${t.artist}">${t.artist}</div>
+          <div class="badges">
+            <span class="badge">${t.primaryGenre || 'Song'}</span>
+            <span class="badge">${t.country || 'US'}</span>
+          </div>
         `;
-        card.addEventListener('click', () => playByIndex(idx));
-        container.appendChild(card);
+        card.addEventListener('click', () => playIndex(idx));
+        tracksGrid.appendChild(card);
       });
     }
 
     function updatePlayerUI(track) {
-      currentTrackName.textContent = track.title;
-      currentArtistName.textContent = track.artist.name;
-      currentTrackCover.style.backgroundImage = `url(${track.album.cover_medium})`;
+      currentCover.style.backgroundImage = `url(${track.cover})`;
+      currentTitle.textContent = track.title;
+      currentArtist.textContent = track.artist;
     }
 
-    async function playTrack(track) {
-      if (!track.preview) {
-        alert('Preview not available for this track.');
-        return;
-      }
-      currentTrack = track;
+    async function playIndex(idx) {
+      if (idx < 0 || idx >= filteredList.length) return;
+      currentIndex = idx;
+      const track = filteredList[currentIndex];
       updatePlayerUI(track);
-      audioPlayer.src = track.preview;
-      audioPlayer.load();
-      try {
-        await audioPlayer.play();
-        isPlaying = true;
-        playButton.innerHTML = '<i class="fas fa-pause-circle"></i>';
-      } catch (e) {
-        console.error('Playback failed:', e);
-        isPlaying = false;
-        playButton.innerHTML = '<i class="fas fa-play-circle"></i>';
-        alert('Could not auto‑play. Click the play button to start.');
-      }
-    }
-
-    function playByIndex(index) {
-      if (index < 0 || index >= currentPlaylist.length) return;
-      currentIndex = index;
-      playTrack(currentPlaylist[currentIndex]);
+      audio.src = track.preview;
+      audio.currentTime = 0; // ALWAYS start from beginning
+      await audio.play().catch(() => {});
+      isPlaying = true;
+      playBtn.innerHTML = '<i class="fas fa-pause-circle"></i>';
     }
 
     function togglePlay() {
-      if (currentIndex === -1 && currentPlaylist.length) {
-        return playByIndex(0);
-      }
-      if (!currentTrack) return;
-      if (isPlaying) {
-        audioPlayer.pause();
-        isPlaying = false;
-        playButton.innerHTML = '<i class="fas fa-play-circle"></i>';
-      } else {
-        audioPlayer.play();
-        isPlaying = true;
-        playButton.innerHTML = '<i class="fas fa-pause-circle"></i>';
-      }
+      if (currentIndex === -1 && filteredList.length) return playIndex(0);
+      if (!filteredList.length) return;
+      if (isPlaying) { audio.pause(); isPlaying = false; playBtn.innerHTML = '<i class="fas fa-play-circle"></i>'; }
+      else { audio.play(); isPlaying = true; playBtn.innerHTML = '<i class="fas fa-pause-circle"></i>'; }
     }
 
     function nextTrack() {
-      if (!currentPlaylist.length) return;
+      if (!filteredList.length) return;
       if (isShuffle) {
-        const rand = Math.floor(Math.random() * currentPlaylist.length);
-        return playByIndex(rand);
+        const r = Math.floor(Math.random() * filteredList.length);
+        return playIndex(r);
       }
-      const next = (currentIndex + 1) % currentPlaylist.length;
-      playByIndex(next);
+      const next = (currentIndex + 1) % filteredList.length;
+      playIndex(next);
     }
 
     function prevTrack() {
-      if (!currentPlaylist.length) return;
-      const prev = (currentIndex - 1 + currentPlaylist.length) % currentPlaylist.length;
-      playByIndex(prev);
+      if (!filteredList.length) return;
+      const prev = (currentIndex - 1 + filteredList.length) % filteredList.length;
+      playIndex(prev);
     }
 
-    async function fetchTracksByGenre(genre, limit = 6) {
-      // Simulated network wait (keeps loader UX)
-      await new Promise(r => setTimeout(r, 300));
-      const base = musicData[genre] || musicData.all;
-      return base.slice(0, limit);
-    }
-
-    async function updateGenre(genre) {
-      currentGenre = genre;
-      document.querySelectorAll('.genre-button').forEach(b => b.classList.toggle('active', b.dataset.genre === genre));
-
-      const loadingHtml = '<div class="loader"><div class="spinner"></div></div>';
-      document.getElementById('featured-tracks').innerHTML = loadingHtml;
-      document.getElementById('recommended-tracks').innerHTML = loadingHtml;
-
-      const baseFeatured = await fetchTracksByGenre(genre, 6);
-      const baseRecommended = await fetchTracksByGenre(genre, 6);
-
-      // Enrich with iTunes results (covers + preview URLs)
-      const [featuredTracks, recommendedTracks] = await Promise.all([
-        enrichTracks(baseFeatured),
-        enrichTracks(baseRecommended),
-      ]);
-
-      currentPlaylist = [...featuredTracks, ...recommendedTracks];
-      currentIndex = -1;
-
-      renderAlbumCards('featured-tracks', featuredTracks);
-      renderAlbumCards('recommended-tracks', recommendedTracks);
-
-      // Seed the player artwork so it doesn't look empty
-      const firstWithCover = currentPlaylist.find(t => t.album && t.album.cover_medium);
-      if (firstWithCover) {
-        currentTrackCover.style.backgroundImage = `url(${firstWithCover.album.cover_medium})`;
+    function setGenre(genre) {
+      genreButtons.forEach(b => b.classList.toggle('active', b.dataset.genre === genre));
+      filteredList = genre === 'all' ? masterList.slice() : masterList.filter(t => (t.genreKey || '').includes(genre));
+      renderGrid(filteredList);
+      // keep current playing if exists; otherwise reset UI art
+      if (currentIndex === -1 && filteredList[0]) {
+        currentCover.style.backgroundImage = `url(${filteredList[0].cover})`;
       }
     }
 
-    // Event wiring
-    document.addEventListener('DOMContentLoaded', async () => {
-      playButton.addEventListener('click', togglePlay);
-      prevButton.addEventListener('click', prevTrack);
-      nextButton.addEventListener('click', nextTrack);
-      shuffleButton.addEventListener('click', () => { isShuffle = !isShuffle; shuffleButton.style.color = isShuffle ? 'var(--highlight)' : 'var(--text-secondary)'; });
-      repeatButton.addEventListener('click', () => { isRepeat = !isRepeat; repeatButton.style.color = isRepeat ? 'var(--highlight)' : 'var(--text-secondary)'; });
+    function attachUIEvents() {
+      playBtn.addEventListener('click', togglePlay);
+      nextBtn.addEventListener('click', nextTrack);
+      prevBtn.addEventListener('click', prevTrack);
+      shuffleBtn.addEventListener('click', () => { isShuffle = !isShuffle; shuffleBtn.style.color = isShuffle ? 'var(--highlight)' : 'var(--text-secondary)'; });
+      repeatBtn.addEventListener('click', () => { isRepeat = !isRepeat; repeatBtn.style.color = isRepeat ? 'var(--highlight)' : 'var(--text-secondary)'; });
 
-      // Genre filter buttons (top)
-      genreFilter.querySelectorAll('.genre-button').forEach(button => {
-        button.addEventListener('click', () => updateGenre(button.dataset.genre));
-      });
-      // Genre shortcuts (sidebar)
-      document.querySelectorAll('#genre-playlists .nav-item').forEach(item => {
-        if (item.dataset.genre) item.addEventListener('click', () => updateGenre(item.dataset.genre));
-      });
-
-      // Audio events for realtime playback UI
-      audioPlayer.addEventListener('timeupdate', updateProgress);
-      audioPlayer.addEventListener('loadedmetadata', () => {
-        totalTimeDisplay.textContent = formatTime(audioPlayer.duration);
-      });
-      audioPlayer.addEventListener('ended', () => {
-        if (isRepeat) {
-          audioPlayer.currentTime = 0; audioPlayer.play();
-        } else {
-          nextTrack();
-        }
-      });
-
-      // Seek on progress click/drag
+      // progress seek (click + drag)
       let seeking = false;
-      function seekAt(clientX) {
-        if (!audioPlayer.duration) return;
+      function seekTo(clientX) {
+        if (!Number.isFinite(audio.duration)) return;
         const rect = progress.getBoundingClientRect();
         const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-        audioPlayer.currentTime = ratio * audioPlayer.duration;
+        audio.currentTime = ratio * audio.duration;
       }
-      progress.addEventListener('mousedown', (e) => { seeking = true; seekAt(e.clientX); });
-      window.addEventListener('mousemove', (e) => { if (seeking) seekAt(e.clientX); });
+      progress.addEventListener('mousedown', (e) => { seeking = true; seekTo(e.clientX); });
+      window.addEventListener('mousemove', (e) => { if (seeking) seekTo(e.clientX); });
       window.addEventListener('mouseup', () => { seeking = false; });
 
-      // Volume
-      volumeBar.addEventListener('click', setVolumeFromClick);
-      // initialize volume UI
-      volumeFill.style.width = `${audioPlayer.volume * 100}%`;
+      // volume
+      function setVolumeAt(clientX) {
+        const rect = volumeBar.getBoundingClientRect();
+        const r = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+        audio.volume = r; volumeFill.style.width = (r * 100) + '%';
+      }
+      volumeBar.addEventListener('click', (e) => setVolumeAt(e.clientX));
 
-      // Load initial content
-      await updateGenre('all');
-    });
+      // audio events
+      audio.addEventListener('timeupdate', () => {
+        if (!Number.isFinite(audio.duration)) return;
+        const pct = (audio.currentTime / audio.duration) * 100;
+        progressFill.style.width = pct + '%';
+        currentTimeEl.textContent = fmt(audio.currentTime);
+      });
+      audio.addEventListener('loadedmetadata', () => {
+        totalTimeEl.textContent = fmt(audio.duration);
+      });
+      audio.addEventListener('ended', () => {
+        if (isRepeat) { audio.currentTime = 0; audio.play(); return; }
+        nextTrack();
+      });
+    }
+
+    // -------- Data fetching --------
+    const SEEDS = {
+      all: [
+        'top hits', 'global 100', 'chart toppers',
+        'The Weeknd', 'Dua Lipa', 'Taylor Swift', 'Drake', 'Ed Sheeran', 'Ariana Grande',
+        'Queen', 'Nirvana', 'AC/DC', 'Eagles', 'Guns N\' Roses', 'Led Zeppelin',
+        'Kendrick Lamar', 'Travis Scott', 'J. Cole', 'Eminem', '50 Cent'
+      ],
+      pop: ['Taylor Swift', 'Dua Lipa', 'Harry Styles', 'Ariana Grande', 'Olivia Rodrigo', 'Katy Perry', 'Sia'],
+      rock: ['Queen', 'Led Zeppelin', 'Nirvana', 'AC/DC', 'Eagles', 'Bon Jovi', 'Metallica'],
+      hiphop: ['Drake', 'Kendrick Lamar', 'Travis Scott', 'J. Cole', 'Eminem', 'Future', 'Lil Wayne']
+    };
+
+    async function itunesSearch(term, limit = 25) {
+      const url = `https://itunes.apple.com/search?term=${encodeURIComponent(term)}&entity=song&limit=${limit}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      return (data.results || []).map(r => ({
+        id: r.trackId,
+        title: r.trackName,
+        artist: r.artistName,
+        preview: r.previewUrl,
+        cover: (r.artworkUrl100 || '').replace('100x100', '512x512'),
+        primaryGenre: r.primaryGenreName,
+        country: r.country || 'US',
+        genreKey: (r.primaryGenreName || '').toLowerCase()
+      })).filter(x => x.preview && x.cover && x.title && x.artist);
+    }
+
+    async function loadMany(genre = 'all') {
+      tracksGrid.innerHTML = '<div class="loader"><div class="spinner"></div></div>';
+      const seeds = genre === 'all' ? SEEDS.all : SEEDS[genre];
+      const batches = await Promise.all(seeds.map(s => itunesSearch(s, 20)));
+      // flatten + dedupe by track id (or preview)
+      let combined = batches.flat();
+      combined = dedupeBy(combined, 'id');
+      // keep only first 150 items to avoid a super heavy DOM
+      combined = combined.slice(0, 150);
+      masterList = combined;
+      setGenre(genre);
+    }
+
+    // -------- init --------
+    attachUIEvents();
+    loadMany('all');
+
+    // genre controls
+    genreButtons.forEach(b => b.addEventListener('click', () => loadMany(b.dataset.genre)));
+    sidebarGenres.forEach(b => b.addEventListener('click', () => loadMany(b.dataset.genre)));
   </script>
 </body>
 </html>
