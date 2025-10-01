@@ -29,7 +29,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px 15px 70px;
+            padding: 20px 15px 40px;
             overflow-x: hidden;
             color: var(--dark);
         }
@@ -296,6 +296,91 @@
             text-align: center;
         }
         
+        /* Cake Styles */
+        .cake-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .cake {
+            position: relative;
+            width: 200px;
+            height: 120px;
+            margin-bottom: 30px;
+        }
+        
+        .cake-base {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(to bottom, #f8c8dc, #f5a6c8);
+            border-radius: 10px 10px 50px 50px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .cake-top {
+            position: absolute;
+            bottom: 60px;
+            width: 180px;
+            height: 40px;
+            background: linear-gradient(to bottom, #ff9a9e, #fad0c4);
+            border-radius: 50px 50px 10px 10px;
+            left: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .candles {
+            position: absolute;
+            bottom: 100px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            padding: 0 30px;
+        }
+        
+        .candle {
+            width: 12px;
+            height: 30px;
+            background: linear-gradient(to bottom, #ff9a9e, #fad0c4);
+            border-radius: 5px;
+            position: relative;
+        }
+        
+        .flame {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 15px;
+            height: 25px;
+            background: #ffd166;
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 15px 5px #ff9a00;
+            animation: flicker 1.5s infinite alternate;
+        }
+        
+        .flame.extinguished {
+            opacity: 0;
+            transform: translateX(-50%) scale(0.1);
+            transition: all 0.5s ease;
+        }
+        
+        @keyframes flicker {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.1); }
+        }
+        
+        .cake-message {
+            font-size: 1.2rem;
+            margin-top: 20px;
+            font-weight: 600;
+            color: var(--primary);
+            min-height: 30px;
+        }
+        
         /* Game Specific Styles */
         .memory-game {
             display: grid;
@@ -483,35 +568,38 @@
             }
         }
         
-        /* Bottom Navigation */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 100;
-        }
-        
-        .nav-item {
+        /* Audio Player Styles */
+        .audio-player {
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: #777;
-            font-size: 0.8rem;
+            margin: 20px 0;
         }
         
-        .nav-item.active {
-            color: var(--primary);
+        .audio-controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
         }
         
-        .nav-item i {
-            font-size: 1.3rem;
-            margin-bottom: 5px;
+        .audio-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(255, 64, 129, 0.3);
+        }
+        
+        .audio-btn:active {
+            transform: scale(0.95);
         }
         
         /* Responsive Adjustments */
@@ -589,26 +677,6 @@
         </div>
     </div>
     
-    <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-        <div class="nav-item active">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </div>
-        <div class="nav-item" onclick="openGame('memory')">
-            <i class="fas fa-gamepad"></i>
-            <span>Games</span>
-        </div>
-        <div class="nav-item" onclick="openGift(1)">
-            <i class="fas fa-gift"></i>
-            <span>Gifts</span>
-        </div>
-        <div class="nav-item" onclick="openGame('message')">
-            <i class="fas fa-heart"></i>
-            <span>Love</span>
-        </div>
-    </div>
-    
     <!-- Gift Modals -->
     <div id="gift1" class="modal">
         <div class="modal-content">
@@ -647,9 +715,19 @@
                     May all your dreams and wishes come true<br>
                     'Cause no one deserves it more than you!"
                 </div>
-                <div style="text-align: center; margin-top: 20px;">
-                    <button class="action-btn" onclick="playAudio()"><i class="fas fa-play"></i> Play Song</button>
-                    <audio id="birthdayAudio" src="https://assets.mixkit.co/music/preview/mixkit-happy-birthday-to-you-493.mp3"></audio>
+                <div class="audio-player">
+                    <div class="audio-controls">
+                        <button class="audio-btn" onclick="playAudio()">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="audio-btn" onclick="pauseAudio()">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                        <button class="audio-btn" onclick="stopAudio()">
+                            <i class="fas fa-stop"></i>
+                        </button>
+                    </div>
+                    <p id="audioStatus" style="margin-top: 10px; font-style: italic;">Click play to listen to your song!</p>
                 </div>
             </div>
         </div>
@@ -663,7 +741,29 @@
             </div>
             <div class="modal-body">
                 <p>Make a wish and blow out the candles! I hope all your birthday wishes come true. This virtual cake has zero calories but all the sweetness! 😊</p>
-                <div style="text-align: center; margin: 20px 0; font-size: 4rem;">🎂</div>
+                
+                <div class="cake-container">
+                    <div class="cake">
+                        <div class="cake-base"></div>
+                        <div class="cake-top"></div>
+                        <div class="candles">
+                            <div class="candle">
+                                <div class="flame" id="flame1"></div>
+                            </div>
+                            <div class="candle">
+                                <div class="flame" id="flame2"></div>
+                            </div>
+                            <div class="candle">
+                                <div class="flame" id="flame3"></div>
+                            </div>
+                            <div class="candle">
+                                <div class="flame" id="flame4"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cake-message" id="cakeMessage">Make a wish and blow out the candles!</div>
+                </div>
+                
                 <div style="text-align: center;">
                     <button class="action-btn" onclick="blowCandles()"><i class="fas fa-wind"></i> Blow Candles</button>
                 </div>
@@ -798,6 +898,11 @@
         function openGift(giftNumber) {
             document.getElementById(`gift${giftNumber}`).style.display = 'flex';
             createHearts();
+            
+            // Reset cake candles when opening gift 3
+            if (giftNumber === 3) {
+                resetCandles();
+            }
         }
         
         function openGame(gameType) {
@@ -831,12 +936,94 @@
         
         // Gift interactive functions
         function playAudio() {
-            const audio = document.getElementById('birthdayAudio');
-            audio.play();
+            // Create audio context for the birthday song
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // Play "Happy Birthday" melody
+            const notes = [
+                {freq: 392, duration: 0.5}, // G
+                {freq: 392, duration: 0.5}, // G
+                {freq: 440, duration: 1},   // A
+                {freq: 392, duration: 1},   // G
+                {freq: 523, duration: 1},   // C
+                {freq: 494, duration: 2},   // B
+                
+                {freq: 392, duration: 0.5}, // G
+                {freq: 392, duration: 0.5}, // G
+                {freq: 440, duration: 1},   // A
+                {freq: 392, duration: 1},   // G
+                {freq: 587, duration: 1},   // D
+                {freq: 523, duration: 2},   // C
+                
+                {freq: 392, duration: 0.5}, // G
+                {freq: 392, duration: 0.5}, // G
+                {freq: 784, duration: 1},   // G (high)
+                {freq: 659, duration: 1},   // E
+                {freq: 523, duration: 1},   // C
+                {freq: 494, duration: 1},   // B
+                {freq: 440, duration: 2},   // A
+                
+                {freq: 698, duration: 0.5}, // F
+                {freq: 698, duration: 0.5}, // F
+                {freq: 659, duration: 1},   // E
+                {freq: 523, duration: 1},   // C
+                {freq: 587, duration: 1},   // D
+                {freq: 523, duration: 2}    // C
+            ];
+            
+            let time = audioContext.currentTime;
+            
+            oscillator.type = 'sine';
+            oscillator.start(time);
+            
+            notes.forEach(note => {
+                oscillator.frequency.setValueAtTime(note.freq, time);
+                time += note.duration * 0.8; // 80% of duration for note
+                oscillator.frequency.setValueAtTime(0, time); // Brief pause
+                time += note.duration * 0.2; // 20% of duration for pause
+            });
+            
+            oscillator.stop(time);
+            
+            document.getElementById('audioStatus').textContent = "Playing Happy Birthday for Wambui! 🎵";
+        }
+        
+        function pauseAudio() {
+            document.getElementById('audioStatus').textContent = "Music paused";
+        }
+        
+        function stopAudio() {
+            document.getElementById('audioStatus').textContent = "Music stopped";
+        }
+        
+        // Cake functionality
+        function resetCandles() {
+            const flames = document.querySelectorAll('.flame');
+            flames.forEach(flame => {
+                flame.classList.remove('extinguished');
+            });
+            document.getElementById('cakeMessage').textContent = "Make a wish and blow out the candles!";
         }
         
         function blowCandles() {
-            alert('🎉 The candles are blown out! Your wish will come true! 🎂');
+            const flames = document.querySelectorAll('.flame');
+            let extinguishedCount = 0;
+            
+            flames.forEach((flame, index) => {
+                setTimeout(() => {
+                    flame.classList.add('extinguished');
+                    extinguishedCount++;
+                    
+                    if (extinguishedCount === flames.length) {
+                        document.getElementById('cakeMessage').innerHTML = "🎉 Your wish will come true! Happy Birthday Wambui! 🎂";
+                    }
+                }, index * 300); // Stagger the extinguishing
+            });
         }
         
         function redeemCoupon() {
