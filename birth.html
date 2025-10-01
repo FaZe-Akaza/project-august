@@ -345,6 +345,15 @@
             }
         }
         
+        .song-lyrics {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-style: italic;
+            line-height: 1.8;
+        }
+        
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.5rem;
@@ -423,12 +432,23 @@
     
     <div id="gift2" class="gift-content">
         <h2>Personalized Song 🎵</h2>
-        <p>This one's for you, Wambui!<br>
-        "Happy birthday to you,<br>
-        Happy birthday to you,<br>
-        Happy birthday dear Wambui,<br>
-        Happy birthday to you!"<br><br>
-        And many more... 🎶</p>
+        <p>Here's a special birthday song for you, Wambui!</p>
+        <div class="song-lyrics">
+            "It's your birthday, Wambui<br>
+            Time to celebrate and feel so happy<br>
+            You're the reason for the season<br>
+            You're the one that makes life worth living<br><br>
+            
+            Blow out the candles, make a wish<br>
+            Hope it comes true with a loving kiss<br>
+            You're growing older, but you're still so fine<br>
+            Wambui, you'll always be mine<br><br>
+            
+            Happy birthday to you, my dear<br>
+            Wishing you joy throughout the year<br>
+            May all your dreams and wishes come true<br>
+            'Cause no one deserves it more than you!"
+        </div>
         <button class="close-btn" onclick="closeGift()">Close</button>
     </div>
     
@@ -459,19 +479,19 @@
         <button class="close-btn" onclick="closeGame()">Close Game</button>
     </div>
     
-    <div id="loveMeter" class="game-content">
+    <div id="loveGame" class="game-content">
         <h2>Love Meter</h2>
         <p>How much is Wambui loved today?</p>
         <div class="love-meter">
             <div class="love-fill" id="loveFill"></div>
         </div>
-        <p id="loveText">Click to measure the love!</p>
+        <p id="loveText">Click the button to measure the love!</p>
         <button class="close-btn" onclick="measureLove()">Measure Love</button>
         <br><br>
         <button class="close-btn" onclick="closeGame()">Close Game</button>
     </div>
     
-    <div id="birthdayQuiz" class="game-content">
+    <div id="quizGame" class="game-content">
         <h2>Birthday Quiz</h2>
         <div class="quiz-container">
             <div class="quiz-question" id="quizQuestion">How awesome is Wambui?</div>
@@ -628,6 +648,10 @@
         function measureLove() {
             const loveFill = document.getElementById('loveFill');
             const loveText = document.getElementById('loveText');
+            
+            // Reset the meter
+            loveFill.style.width = '0%';
+            loveText.textContent = "Measuring the love...";
             
             // Animate the love meter
             let width = 0;
